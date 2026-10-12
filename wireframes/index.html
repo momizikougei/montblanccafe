@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>モンブラン ワイヤーフレーム</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Cormorant+Garamond:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#111; --mid:#666; --light:#999; --line:#bbb; --ph:#e4e4e4; --ph2:#d2d2d2; --paper:#fafafa; --bg:#efefef;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:"Noto Sans JP",sans-serif;font-size:13px;line-height:1.7}
+.min{font-family:"Shippori Mincho",serif}
+.en{font-family:"Cormorant Garamond",serif;letter-spacing:.12em}
+
+/* ===== page chrome ===== */
+.top{max-width:1360px;margin:0 auto;padding:32px 16px 0}
+.top h1{font-family:"Shippori Mincho",serif;font-size:24px}
+.top p{color:var(--mid);margin-top:4px}
+.tabs{display:flex;gap:0;margin-top:20px;border-bottom:1px solid var(--ink);flex-wrap:wrap}
+.tabs button{background:none;border:1px solid transparent;border-bottom:none;padding:10px 18px;font:inherit;cursor:pointer;color:var(--mid)}
+.tabs button b{display:block;font-family:"Shippori Mincho",serif;font-size:16px;color:var(--ink)}
+.tabs button[aria-selected="true"]{background:#fff;border-color:var(--ink);margin-bottom:-1px;color:var(--ink)}
+.panel{display:none;max-width:1360px;margin:0 auto;padding:24px 16px 80px}
+.panel.on{display:block}
+.concept{background:#fff;border:1px solid var(--ink);padding:20px 24px;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:24px;margin-bottom:24px}
+.concept h2{font-family:"Shippori Mincho",serif;font-size:20px;line-height:1.4}
+.concept h3{font-size:11px;letter-spacing:.1em;color:var(--mid);margin-bottom:4px}
+.concept ul{padding-left:1.2em}
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:28px;align-items:start}
+.cap{font-size:11px;letter-spacing:.15em;color:var(--mid);margin-bottom:8px}
+
+/* ===== wireframe primitives ===== */
+.pc{background:var(--paper);border:1px solid var(--ink);overflow:hidden}
+.pc .bar{height:24px;border-bottom:1px solid var(--ink);display:flex;align-items:center;gap:6px;padding:0 10px;background:#fff}
+.pc .bar i{width:8px;height:8px;border:1px solid var(--ink);border-radius:50%}
+.sp{width:300px;background:var(--paper);border:1px solid var(--ink);border-radius:28px;padding:14px 10px;position:sticky;top:16px}
+.sp .scr{border:1px solid var(--line);height:600px;overflow-y:auto;background:var(--paper);position:relative;font-size:10px}
+.ph{position:relative;background:
+  linear-gradient(to top right,transparent calc(50% - .5px),var(--ph2) 50%,transparent calc(50% + .5px)),
+  linear-gradient(to top left,transparent calc(50% - .5px),var(--ph2) 50%,transparent calc(50% + .5px)),var(--ph);
+  display:flex;align-items:center;justify-content:center;color:var(--light);font-size:11px;min-height:40px}
+.ph span{background:var(--ph);padding:0 6px}
+.ph.dark{background:
+  linear-gradient(to top right,transparent calc(50% - .5px),#888 50%,transparent calc(50% + .5px)),
+  linear-gradient(to top left,transparent calc(50% - .5px),#888 50%,transparent calc(50% + .5px)),#bdbdbd;color:#555}
+.ph.dark span{background:#bdbdbd}
+.lbl{font-family:"Cormorant Garamond",serif;letter-spacing:.2em;font-size:12px;color:var(--mid)}
+.ttl{font-family:"Shippori Mincho",serif;font-weight:700;line-height:1.35}
+.txt{display:block;height:6px;background:var(--ph2);margin:7px 0}
+.txt.s{width:60%}.txt.m{width:80%}
+.btn{display:inline-block;border:1px solid var(--ink);padding:6px 14px;font-size:11px;margin:4px 6px 0 0;background:#fff}
+.btn.fill{background:var(--ink);color:#fff}
+.rule{border-top:1px solid var(--line)}
+.sec{position:relative;padding:56px 48px;border-bottom:1px dashed var(--line)}
+.n{position:absolute;width:20px;height:20px;border-radius:50%;background:var(--ink);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;z-index:5}
+.sec>.n{top:12px;left:12px}
+.notes{background:#fff;border:1px solid var(--ink);padding:18px 20px;position:sticky;top:16px}
+.notes ol{list-style:none}
+.notes li{display:grid;grid-template-columns:20px 1fr;gap:10px;margin-bottom:12px;font-size:12px}
+.notes li .n{position:static}
+.notes h4{font-family:"Shippori Mincho",serif;font-size:15px;margin-bottom:12px}
+.sidecol{display:flex;flex-direction:column;gap:20px}
+.leader{display:flex;align-items:baseline;gap:6px;margin:8px 0}
+.leader:before{content:"";order:2;flex:1;border-bottom:1px dotted var(--mid)}
+.leader b{order:1;font-weight:500}.leader em{order:3;font-style:normal;color:var(--mid)}
+.vt{writing-mode:vertical-rl;text-orientation:upright}
+.mapbox{background:repeating-linear-gradient(0deg,transparent 0 23px,var(--ph2) 23px 24px),repeating-linear-gradient(90deg,transparent 0 23px,var(--ph2) 23px 24px),var(--ph);display:flex;align-items:center;justify-content:center;color:var(--mid)}
+.pin{width:14px;height:14px;background:var(--ink);border-radius:50% 50% 50% 0;transform:rotate(-45deg)}
+
+/* ===== A: editorial ===== */
+.a-head{display:flex;justify-content:space-between;align-items:center;padding:18px 48px;border-bottom:1px solid var(--line)}
+.a-head nav{display:flex;gap:22px;font-size:11px;letter-spacing:.15em}
+.a-hero{position:relative;padding:0}
+.a-hero .ph{height:560px}
+.a-hero .copy{position:absolute;left:48px;bottom:84px;background:var(--paper);padding:28px 32px;max-width:400px}
+.a-hero .info{position:absolute;right:0;bottom:0;background:#fff;border-top:1px solid var(--ink);border-left:1px solid var(--ink);padding:10px 20px;font-size:11px;display:flex;gap:18px}
+.a-story{display:grid;grid-template-columns:5fr 7fr;gap:48px}
+.a-story .chap{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;margin-bottom:36px}
+.a-tanuki{display:grid;grid-template-columns:7fr 4fr;gap:0;padding:0}
+.a-tanuki .ph{height:620px}
+.a-tanuki .t{padding:64px 40px;border-left:1px solid var(--ink)}
+.bignum{font-family:"Cormorant Garamond",serif;font-size:96px;line-height:1}
+.a-menu .cats{display:flex;gap:0;border-bottom:1px solid var(--ink);margin:20px 0 28px}
+.a-menu .cats span{padding:6px 18px;font-size:11px;letter-spacing:.15em;border:1px solid transparent;border-bottom:none}
+.a-menu .cats span.on{border-color:var(--ink);background:#fff;margin-bottom:-1px}
+.a-menu .cols{display:grid;grid-template-columns:3fr 4fr 3fr;gap:40px;align-items:start}
+.a-cafe{display:grid;grid-template-columns:repeat(12,1fr);align-items:center}
+.a-gal{display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:56px;gap:10px}
+.a-access{display:grid;grid-template-columns:4fr 5fr;gap:48px}
+table.info{border-collapse:collapse;width:100%;font-size:12px}
+table.info th,table.info td{border-top:1px solid var(--line);padding:10px 4px;text-align:left;vertical-align:top}
+table.info th{width:90px;font-weight:500;color:var(--mid)}
+.foot{background:#2a2a2a;color:#ddd;padding:28px 48px;display:flex;justify-content:space-between;font-size:11px}
+
+/* ===== B: book ===== */
+.b-wrap{display:grid;grid-template-columns:200px 1fr}
+.b-side{border-right:1px solid var(--ink);padding:28px 20px;background:#fff;position:relative}
+.b-side .in{position:sticky;top:16px}
+.b-side .logo{height:230px;display:flex;justify-content:center;font-size:22px;letter-spacing:.3em;margin-bottom:28px}
+.b-side nav div{border-top:1px solid var(--line);padding:8px 0;font-size:12px;display:flex;justify-content:space-between}
+.b-side nav div small{font-family:"Cormorant Garamond",serif;color:var(--light)}
+.b-side .today{border:1px solid var(--ink);padding:12px;margin-top:28px;font-size:11px}
+.b-main .sec{padding:64px 56px}
+.b-page{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--light);font-family:"Cormorant Garamond",serif}
+.b-hero{display:grid;grid-template-columns:1fr 90px;gap:32px;min-height:520px}
+.b-hero .vt{font-size:34px;letter-spacing:.2em;justify-self:center}
+.b-row{display:flex;flex-direction:row-reverse;gap:40px;align-items:flex-start}
+.b-row .vt.h{font-size:26px;letter-spacing:.15em;flex:none;max-height:330px;line-height:1.6}
+.b-row .vt.p{height:240px;flex:none;font-size:12px;line-height:2.2;color:var(--mid)}
+.b-plate{border:1px solid var(--ink);padding:16px;background:#fff;width:62%;margin:0 auto}
+.b-menu{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--ink);background:#fff}
+.b-menu>div{padding:18px 16px;border-left:1px solid var(--line)}
+.b-menu>div:first-child{border-left:none}
+
+/* ===== C: floors ===== */
+.c-wrap{position:relative}
+.c-elev{position:absolute;right:16px;top:120px;bottom:0;width:44px;z-index:6}
+.c-elev .stick{position:sticky;top:16px;border:1px solid var(--ink);background:#fff;padding:6px 0;text-align:center;font-family:"Cormorant Garamond",serif;font-size:13px}
+.c-elev .stick div{padding:6px 0}
+.c-elev .stick .on{background:var(--ink);color:#fff}
+.awning{height:34px;background:repeating-linear-gradient(90deg,#9a9a9a 0 30px,#fff 30px 60px);border-bottom:1px solid var(--ink);position:relative}
+.awning:after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:10px;background:radial-gradient(circle at 15px 0,#9a9a9a 14px,transparent 15px) 0 0/30px 10px repeat-x}
+.c-head{display:flex;justify-content:space-between;align-items:center;padding:22px 48px 14px}
+.c-hero{display:grid;grid-template-columns:6fr 5fr;gap:0;padding:0;min-height:560px}
+.c-hero .t{padding:72px 48px;display:flex;flex-direction:column;justify-content:space-between}
+.floor{display:flex;align-items:baseline;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:32px}
+.floor .f{font-family:"Cormorant Garamond",serif;font-size:56px;line-height:1}
+.tl{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;padding-top:28px}
+.tl:before{content:"";position:absolute;top:8px;left:0;right:0;border-top:1px solid var(--ink)}
+.tl>div{position:relative}
+.tl>div:before{content:"";position:absolute;top:-25px;left:0;width:11px;height:11px;border-radius:50%;background:var(--ink)}
+.tl .yr{font-family:"Cormorant Garamond",serif;font-size:28px;line-height:1}
+.c-1f{display:grid;grid-template-columns:5fr 7fr;gap:40px}
+.case{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--ink);background:#fff}
+.case>div{border-left:1px solid var(--line);padding:10px}
+.case>div:first-child{border-left:none}
+.timebar{display:grid;grid-template-columns:2fr 1fr 3fr 4fr;border:1px solid var(--ink);margin:14px 0 6px;font-size:11px;background:#fff}
+.timebar>div{padding:10px;border-left:1px solid var(--ink)}
+.timebar>div:first-child{border-left:none}
+.timebar .off{background:repeating-linear-gradient(45deg,transparent 0 5px,var(--ph2) 5px 6px);color:var(--light)}
+.c-23{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+
+/* ===== compare ===== */
+.cmp{background:#fff;border:1px solid var(--ink);border-collapse:collapse;width:100%;font-size:12px}
+.cmp th,.cmp td{border:1px solid var(--line);padding:12px 14px;text-align:left;vertical-align:top}
+.cmp thead th{background:var(--ink);color:#fff;font-weight:500}
+.cmp tbody th{width:150px;background:#f5f5f5;font-weight:500}
+
+@media (max-width:1100px){
+  .stage{grid-template-columns:1fr}
+  .sidecol{flex-direction:row;flex-wrap:wrap;align-items:flex-start}
+  .sp,.notes{position:static}
+  .concept{grid-template-columns:1fr}
+}
+@media (max-width:820px){
+  .pc{display:none}
+  .cap.pccap{display:none}
+  .pcmsg{display:block!important}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>菓子喫茶 モンブラン ― レイアウト案（白黒ワイヤーフレーム）</h1>
+  <p>about.md の構成（HERO / STORY / TANUKI CAKE / MENU / CAFE / GALLERY / ACCESS）をもとにした3案。色・書体・写真は未確定で、配置と読ませる順番だけを比べるためのものです。</p>
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-t="a">A 案<b>雑誌の見開き</b></button>
+    <button role="tab" aria-selected="false" data-t="b">B 案<b>喫茶の品書き帖</b></button>
+    <button role="tab" aria-selected="false" data-t="c">C 案<b>お店の階を上がる</b></button>
+    <button role="tab" aria-selected="false" data-t="cmp">比較<b>3案の比較</b></button>
+  </div>
+</header>
+
+<!-- =================================================================== A -->
+<section class="panel on" id="p-a">
+  <div class="concept">
+    <div><h3>CONCEPT</h3><h2>写真と文章を非対称に組む、<br>雑誌の特集ページのような縦スクロール。</h2></div>
+    <div><h3>ねらい</h3><ul><li>写真を一番大きく見せられる</li><li>STORY → たぬき → 喫茶 の順に、ページをめくる感覚で読ませる</li><li>about.md の構成をほぼそのまま使える</li></ul></div>
+    <div><h3>気をつける点</h3><ul><li>写真の質と枚数で印象が大きく変わる</li><li>営業時間はヒーローの帯とヘッダーで補う必要あり</li></ul></div>
+  </div>
+  <div class="stage">
+    <div>
+      <p class="cap pccap">PC ― 1280px 想定</p>
+      <p class="pcmsg" style="display:none;color:var(--mid)">※PC版のワイヤーは幅の広い画面で表示されます。</p>
+      <div class="pc">
+        <div class="bar"><i></i><i></i><i></i></div>
+        <div class="a-head" style="position:relative">
+          <span class="n" style="left:12px;top:12px">1</span>
+          <div class="min" style="font-size:20px;padding-left:20px">菓子喫茶 モンブラン</div>
+          <nav class="en"><span>STORY</span><span>TANUKI</span><span>MENU</span><span>CAFE</span><span>ACCESS</span><span>◎ Instagram</span></nav>
+        </div>
+        <div class="sec a-hero">
+          <span class="n">2</span>
+          <div class="ph dark"><span>外観（赤いオーニング）または 店内の大きな写真</span></div>
+          <div class="copy">
+            <p class="lbl">SINCE 1966 — OITA / JIMBOCHO</p>
+            <p class="ttl" style="font-size:32px;margin:10px 0 14px">祖父母の味を、<br>東京で。</p>
+            <span class="txt"></span><span class="txt s"></span>
+            <div style="margin-top:14px"><span class="btn">喫茶について</span><span class="btn">お菓子を見る</span></div>
+          </div>
+          <div class="info"><b>本日 8:00–18:00</b><span>神保町駅 徒歩1分</span><span>月・火 定休</span></div>
+        </div>
+        <div class="sec">
+          <span class="n">3</span>
+          <div class="a-story">
+            <div style="position:sticky;top:0">
+              <p class="lbl">01 — STORY</p>
+              <p class="ttl" style="font-size:30px;margin:12px 0 20px">祖父母から母へ。<br>そして、東京へ。</p>
+              <span class="txt"></span><span class="txt m"></span><span class="txt"></span><span class="txt s"></span>
+            </div>
+            <div>
+              <div class="chap"><div class="ph" style="grid-column:1/9;height:230px"><span>大分の店（昔の写真）</span></div><div style="grid-column:9/13;align-self:end"><p class="lbl">昭和41年</p><p class="min" style="font-size:15px">大分・豊後高田で</p><span class="txt"></span><span class="txt s"></span></div></div>
+              <div class="chap"><div style="grid-column:1/5;align-self:center"><p class="lbl">受け継ぐ</p><p class="min" style="font-size:15px">祖母と母が守った味</p><span class="txt"></span><span class="txt s"></span></div><div class="ph" style="grid-column:6/13;height:180px"><span>手作業の写真</span></div></div>
+              <div class="chap" style="margin-bottom:0"><div class="ph" style="grid-column:2/7;height:260px"><span>家族・店主</span></div><div style="grid-column:8/13;align-self:end"><p class="lbl">2026.6.27</p><p class="min" style="font-size:15px">祖父の夢を、神保町で</p><span class="txt"></span><span class="txt s"></span></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="sec a-tanuki">
+          <span class="n">4</span>
+          <div class="ph dark"><span>たぬきケーキ（大判・寄り）</span></div>
+          <div class="t">
+            <p class="lbl">02 — TANUKI CAKE</p>
+            <p class="bignum" style="margin:24px 0 4px">1966</p>
+            <p class="lbl" style="margin-bottom:24px">昭和41年から、今日まで。</p>
+            <p class="ttl" style="font-size:24px;margin-bottom:16px">たぬきが、<br>ここにいる理由。</p>
+            <span class="txt"></span><span class="txt"></span><span class="txt m"></span><span class="txt s"></span>
+            <div class="ph" style="height:120px;width:70%;margin-top:28px;margin-left:auto"><span>コースター</span></div>
+          </div>
+        </div>
+        <div class="sec a-menu">
+          <span class="n">5</span>
+          <p class="lbl">03 — MENU</p>
+          <p class="ttl" style="font-size:26px">お品書き</p>
+          <div class="cats en"><span class="on">CAKE</span><span>CAFE</span><span>FOOD</span><span>TAKE OUT</span></div>
+          <div class="cols">
+            <div class="ph" style="height:300px"><span>プリンアラモード</span></div>
+            <div>
+              <div class="leader"><b>たぬきケーキ</b><em>¥000</em></div>
+              <div class="leader"><b>ショートケーキ</b><em>¥000</em></div>
+              <div class="leader"><b>マーブルケーキ</b><em>¥000</em></div>
+              <div class="leader"><b>プリンアラモード</b><em>¥000</em></div>
+              <div class="leader"><b>やせうま</b><em>¥000</em></div>
+              <p style="font-size:11px;color:var(--light);margin-top:14px">※価格は data ファイル1か所で更新</p>
+            </div>
+            <div class="ph" style="height:200px;margin-top:90px"><span>クリームソーダ</span></div>
+          </div>
+        </div>
+        <div class="sec" style="padding-left:0;padding-right:0">
+          <span class="n">6</span>
+          <div class="a-cafe">
+            <div style="grid-column:1/6;grid-row:1;background:#fff;border:1px solid var(--ink);padding:32px;margin-left:48px;position:relative;z-index:2">
+              <p class="lbl">04 — CAFE ／ 2F・3F</p>
+              <p class="ttl" style="font-size:24px;margin:10px 0 14px">お菓子を食べる<br>だけじゃない。</p>
+              <span class="txt"></span><span class="txt m"></span>
+              <p style="font-size:11px;margin-top:12px">ゆっくり過ごす ／ 誰かと話す ／ 本を読む</p>
+            </div>
+            <div class="ph" style="grid-column:4/13;grid-row:1;height:440px"><span>2F 店内（臙脂のソファ・ペンダントライト）</span></div>
+          </div>
+        </div>
+        <div class="sec">
+          <span class="n">7</span>
+          <div style="display:flex;justify-content:space-between;align-items:end;margin-bottom:20px"><div><p class="lbl">05 — GALLERY</p><p class="ttl" style="font-size:22px">店の風景</p></div><span class="btn">Instagramで見る →</span></div>
+          <div class="a-gal">
+            <div class="ph" style="grid-column:1/6;grid-row:span 5"><span>外観</span></div>
+            <div class="ph" style="grid-column:6/9;grid-row:span 3"><span>食器</span></div>
+            <div class="ph" style="grid-column:9/13;grid-row:span 4"><span>床の花柄</span></div>
+            <div class="ph" style="grid-column:6/9;grid-row:span 4"><span>ショーケース</span></div>
+            <div class="ph" style="grid-column:9/13;grid-row:span 3"><span>照明</span></div>
+            <div class="ph" style="grid-column:2/6;grid-row:span 3"><span>神保町の街</span></div>
+          </div>
+        </div>
+        <div class="sec">
+          <span class="n">8</span>
+          <div class="a-access">
+            <div>
+              <p class="lbl">06 — ACCESS</p>
+              <p class="ttl" style="font-size:22px;margin:8px 0 18px">神保町駅から、すぐ。</p>
+              <table class="info"><tr><th>住所</th><td>千代田区神田神保町1-12-11-1</td></tr><tr><th>営業時間</th><td>水〜金 8:00–18:00<br>土日祝 9:00–18:00</td></tr><tr><th>定休日</th><td>月・火</td></tr><tr><th>フロア</th><td>1F 販売 ／ 2F・3F 喫茶</td></tr></table>
+              <p style="font-size:11px;color:var(--mid);margin-top:10px">最新情報は Instagram をご確認ください</p>
+              <div><span class="btn fill">Google Map</span><span class="btn">Instagram</span></div>
+            </div>
+            <div class="mapbox" style="height:300px"><div class="pin"></div></div>
+          </div>
+        </div>
+        <div class="foot"><span>菓子喫茶 モンブラン</span><span class="en">INSTAGRAM ／ ACCESS</span></div>
+      </div>
+    </div>
+
+    <div class="sidecol">
+      <div>
+        <p class="cap">SP ― 375px 想定</p>
+        <div class="sp"><div class="scr">
+          <div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid var(--line)"><b class="min">モンブラン</b><span>☰</span></div>
+          <div class="ph dark" style="height:300px"><span>ヒーロー写真</span></div>
+          <div style="padding:16px 14px;margin-top:-50px;background:var(--paper);margin-right:40px;position:relative"><p class="ttl" style="font-size:18px">祖父母の味を、<br>東京で。</p><span class="txt"></span></div>
+          <div style="border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:6px 14px;display:flex;justify-content:space-between"><b>本日 8:00–18:00</b><span>地図 →</span></div>
+          <div style="padding:24px 14px"><p class="lbl">STORY</p><p class="ttl" style="font-size:15px">祖父母から母へ。</p><span class="txt"></span><span class="txt s"></span>
+            <div class="ph" style="height:120px;margin:12px 30px 10px 0"></div><div class="ph" style="height:90px;margin-left:60px"></div></div>
+          <div class="ph dark" style="height:260px"><span>たぬきケーキ</span></div>
+          <div style="padding:16px 14px"><p class="bignum" style="font-size:44px">1966</p><span class="txt"></span><span class="txt s"></span></div>
+          <div style="padding:16px 14px"><p class="lbl">MENU</p><div class="leader"><b>たぬきケーキ</b><em>¥000</em></div><div class="leader"><b>プリン</b><em>¥000</em></div><div class="leader"><b>ソーダ</b><em>¥000</em></div></div>
+          <div class="ph" style="height:180px"></div>
+          <div style="padding:16px 14px"><p class="lbl">ACCESS</p><div class="mapbox" style="height:110px"><div class="pin"></div></div></div>
+        </div></div>
+      </div>
+      <div class="notes">
+        <h4>ポイント</h4>
+        <ol>
+          <li><span class="n">1</span><span>ヘッダーは細い罫線1本だけ。英字の小さなナビ。</span></li>
+          <li><span class="n">2</span><span>全面写真の上に、紙を1枚置いたようにコピーをのせる。右下に「本日の営業」の帯。</span></li>
+          <li><span class="n">3</span><span>見出しを左に固定し、右の写真と文章が年代順に流れる。写真のサイズと位置は毎回ずらす。</span></li>
+          <li><span class="n">4</span><span>写真7：文章4の見開き。「1966」の大きな数字で時間の長さを見せる。</span></li>
+          <li><span class="n">5</span><span>昔の喫茶メニューのような点線つきの品書き。写真は高さをそろえない。</span></li>
+          <li><span class="n">6</span><span>写真と文章の箱を重ねて、ページの段組みを崩す。</span></li>
+          <li><span class="n">7</span><span>大小をまぜた雑誌風のギャラリーから Instagram へ。</span></li>
+          <li><span class="n">8</span><span>情報は表組み。Google Map ボタンを一番目立たせる。</span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================================== B -->
+<section class="panel" id="p-b">
+  <div class="concept">
+    <div><h3>CONCEPT</h3><h2>縦書きの見出しと、左に固定した「お店の札」。<br>本の街・神保町らしい、喫茶の品書き帖。</h2></div>
+    <div><h3>ねらい</h3><ul><li>営業時間・地図がいつでも見える（固定サイドバー）</li><li>縦書きで「文学的な空気」と和の落ち着きを出す</li><li>各セクションを本の1ページのように区切る</li></ul></div>
+    <div><h3>気をつける点</h3><ul><li>縦書き本文は長くすると読みにくい → 見出しと短文だけに使う</li><li>スマホでは下部固定バーに切り替える</li></ul></div>
+  </div>
+  <div class="stage">
+    <div>
+      <p class="cap pccap">PC ― 1280px 想定</p>
+      <p class="pcmsg" style="display:none;color:var(--mid)">※PC版のワイヤーは幅の広い画面で表示されます。</p>
+      <div class="pc">
+        <div class="bar"><i></i><i></i><i></i></div>
+        <div class="b-wrap">
+          <aside class="b-side">
+            <span class="n" style="left:8px;top:8px">1</span>
+            <div class="in">
+            <div class="logo"><span class="vt min">菓子喫茶 モンブラン</span></div>
+            <nav>
+              <div><span>はじまり</span><small>STORY</small></div>
+              <div><span>たぬき</span><small>TANUKI</small></div>
+              <div><span>お品書き</span><small>MENU</small></div>
+              <div><span>喫茶室</span><small>CAFE</small></div>
+              <div><span>写真帖</span><small>GALLERY</small></div>
+              <div><span>道しるべ</span><small>ACCESS</small></div>
+            </nav>
+            <div class="today" style="position:relative">
+              <span class="n" style="right:-10px;top:-10px">2</span>
+              <p class="lbl">TODAY</p>
+              <p style="font-size:15px;font-weight:700;margin:2px 0">営業中</p>
+              <p>8:00–18:00</p>
+              <p style="color:var(--mid)">いまは「喫茶」の時間</p>
+            </div>
+            <div style="margin-top:14px"><span class="btn fill" style="display:block;text-align:center">地図をひらく</span><span class="btn" style="display:block;text-align:center;margin-top:6px">Instagram</span></div>
+            </div>
+          </aside>
+          <div class="b-main">
+            <div class="sec">
+              <span class="n">3</span>
+              <div class="b-hero">
+                <div class="ph dark"><span>店内 または たぬきケーキ（縦長でも可）</span></div>
+                <div style="display:flex;flex-direction:row-reverse;gap:18px">
+                  <p class="vt ttl" style="font-size:30px;letter-spacing:.25em">祖父母の味を、東京で。</p>
+                  <p class="vt" style="font-size:11px;color:var(--mid);height:280px;line-height:2;margin-top:80px">大分で六十年。家族が守ってきたお菓子と時間。</p>
+                </div>
+              </div>
+              <span class="b-page">— 1 —</span>
+            </div>
+            <div class="sec">
+              <span class="n">4</span>
+              <div class="b-row">
+                <p class="vt h ttl">祖父母から母へ。そして、東京へ。</p>
+                <p class="vt p">祖父が始めた店の味を、祖母と母が守ってきた。その味と、いつか東京で、という夢を、神保町へ。</p>
+                <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:14px">
+                  <div class="ph" style="height:240px;grid-column:1/3"><span>大分の店（昔の写真）</span></div>
+                  <div class="ph" style="height:150px"><span>家族</span></div>
+                  <div class="ph" style="height:190px;margin-top:-40px"><span>手作業</span></div>
+                </div>
+              </div>
+              <span class="b-page">— 2 —</span>
+            </div>
+            <div class="sec">
+              <span class="n">5</span>
+              <div class="b-row">
+                <p class="vt h ttl">たぬきが、ここにいる理由。</p>
+                <div style="flex:1">
+                  <div class="b-plate"><div class="ph dark" style="height:340px"><span>たぬきケーキ（額装のように）</span></div>
+                    <p style="text-align:center;font-size:11px;margin-top:10px" class="min">図版一　たぬきケーキ（昭和四十一年〜）</p></div>
+                  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:28px">
+                    <div><p class="lbl">なぜ たぬき？</p><span class="txt"></span><span class="txt s"></span></div>
+                    <div><p class="lbl">いつから？</p><span class="txt"></span><span class="txt s"></span></div>
+                    <div><p class="lbl">家族にとって</p><span class="txt"></span><span class="txt s"></span></div>
+                    <div><p class="lbl">東京で復活</p><span class="txt"></span><span class="txt s"></span></div>
+                  </div>
+                </div>
+              </div>
+              <span class="b-page">— 3 —</span>
+            </div>
+            <div class="sec">
+              <span class="n">6</span>
+              <div class="b-row">
+                <p class="vt h ttl">お品書き</p>
+                <div style="flex:1">
+                  <div class="b-menu">
+                    <div><p class="lbl">CAKE</p><div class="leader"><b>たぬき</b><em>000</em></div><div class="leader"><b>ショート</b><em>000</em></div><div class="leader"><b>マーブル</b><em>000</em></div></div>
+                    <div><p class="lbl">CAFE</p><div class="leader"><b>珈琲</b><em>000</em></div><div class="leader"><b>ソーダ</b><em>000</em></div><div class="leader"><b>プリン</b><em>000</em></div></div>
+                    <div><p class="lbl">FOOD</p><div class="leader"><b>がめ煮カレー</b><em>000</em></div><div class="leader"><b>エルヴィス</b><em>000</em></div></div>
+                    <div><p class="lbl">TAKE OUT</p><div class="leader"><b>やせうま</b><em>000</em></div><div class="leader"><b>焼き菓子</b><em>000</em></div></div>
+                  </div>
+                  <div style="display:grid;grid-template-columns:2fr 1fr 1.4fr;gap:14px;margin-top:18px"><div class="ph" style="height:150px"></div><div class="ph" style="height:210px"></div><div class="ph" style="height:120px"></div></div>
+                </div>
+              </div>
+              <span class="b-page">— 4 —</span>
+            </div>
+            <div class="sec">
+              <span class="n">7</span>
+              <div class="b-row">
+                <p class="vt h ttl">本を一冊、持ってきて。</p>
+                <div style="flex:1;display:grid;grid-template-columns:3fr 2fr;gap:16px">
+                  <div class="ph" style="height:300px"><span>2F 喫茶室</span></div>
+                  <div><div class="ph" style="height:170px"><span>3F</span></div><p class="min" style="margin-top:12px;font-size:14px">ひとりで ／ 誰かと</p><span class="txt"></span><span class="txt s"></span></div>
+                </div>
+              </div>
+              <span class="b-page">— 5 —</span>
+            </div>
+            <div class="sec">
+              <span class="n">8</span>
+              <div class="b-row">
+                <p class="vt h ttl">道しるべ</p>
+                <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:28px">
+                  <div class="mapbox" style="height:240px"><div class="pin"></div></div>
+                  <table class="info"><tr><th>住所</th><td>千代田区神田神保町1-12-11-1</td></tr><tr><th>最寄り</th><td>神保町駅 徒歩1分</td></tr><tr><th>営業</th><td>水〜金 8–18 ／ 土日祝 9–18</td></tr><tr><th>定休</th><td>月・火</td></tr></table>
+                </div>
+              </div>
+              <span class="b-page">— 6 —</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidecol">
+      <div>
+        <p class="cap">SP ― 375px 想定</p>
+        <div class="sp"><div class="scr" style="padding-bottom:50px">
+          <div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid var(--line)"><b class="min">菓子喫茶 モンブラン</b><span>☰</span></div>
+          <div style="display:flex;gap:10px;padding:14px"><div class="ph dark" style="flex:1;height:320px"></div><p class="vt ttl" style="font-size:18px">祖父母の味を、東京で。</p></div>
+          <div style="padding:20px 14px;display:flex;flex-direction:row-reverse;gap:12px"><p class="vt ttl" style="font-size:14px">祖父母から母へ。</p><div style="flex:1"><div class="ph" style="height:130px"></div><span class="txt"></span><span class="txt s"></span></div></div>
+          <div style="padding:14px"><div class="b-plate" style="width:100%;padding:8px"><div class="ph dark" style="height:200px"></div></div><p class="min" style="text-align:center;font-size:9px;margin-top:4px">図版一 たぬきケーキ</p></div>
+          <div style="padding:14px"><p class="ttl" style="font-size:14px">お品書き</p><div class="leader"><b>たぬき</b><em>000</em></div><div class="leader"><b>プリン</b><em>000</em></div></div>
+          <div style="padding:14px"><div class="ph" style="height:140px"></div></div>
+          <div style="position:sticky;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--ink);display:grid;grid-template-columns:1.4fr 1fr 1fr;text-align:center;font-size:10px;margin-top:20px">
+            <div style="padding:8px;border-right:1px solid var(--line)"><b>営業中</b> 〜18:00</div><div style="padding:8px;border-right:1px solid var(--line)">地図</div><div style="padding:8px">Instagram</div>
+          </div>
+        </div></div>
+      </div>
+      <div class="notes">
+        <h4>ポイント</h4>
+        <ol>
+          <li><span class="n">1</span><span>左に縦書きの店名と和名ナビを固定。暖簾や看板のような役割。</span></li>
+          <li><span class="n">2</span><span>「いま営業中か／今はモーニング・ランチ・喫茶のどれか」を時刻から表示。</span></li>
+          <li><span class="n">3</span><span>ヒーローは写真＋縦書きコピー。広告っぽさを抑える。</span></li>
+          <li><span class="n">4</span><span>各章は「右に縦書き見出し → 左へ読み進む」本と同じ向き。ページ番号つき。</span></li>
+          <li><span class="n">5</span><span>たぬきケーキを図版のように額装。4つの問いで物語にする。</span></li>
+          <li><span class="n">6</span><span>4カテゴリーを1枚の品書きとして並べる。タブ切替なし。</span></li>
+          <li><span class="n">7</span><span>神保町＝本の街とつなげた喫茶室の紹介。</span></li>
+          <li><span class="n">8</span><span>スマホでは左の札が<b>下部固定バー</b>（営業・地図・Instagram）になる。</span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================================== C -->
+<section class="panel" id="p-c">
+  <div class="concept">
+    <div><h3>CONCEPT</h3><h2>赤いオーニングをくぐり、<br>1F のお菓子売場から 2F・3F の喫茶へ上がっていく。</h2></div>
+    <div><h3>ねらい</h3><ul><li>Instagram から来た人に、まずたぬきケーキを見せる</li><li>実際の建物の構造（1F 販売 / 2F・3F 喫茶）がそのまま伝わる</li><li>時間帯（モーニング／ランチ／喫茶）を帯で見せる</li></ul></div>
+    <div><h3>気をつける点</h3><ul><li>演出が強くなりすぎないよう、階の表現は罫線と数字程度に</li><li>about.md と比べて STORY と MENU の順番が入れかわる</li></ul></div>
+  </div>
+  <div class="stage">
+    <div>
+      <p class="cap pccap">PC ― 1280px 想定</p>
+      <p class="pcmsg" style="display:none;color:var(--mid)">※PC版のワイヤーは幅の広い画面で表示されます。</p>
+      <div class="pc">
+        <div class="bar"><i></i><i></i><i></i></div>
+        <div class="c-wrap">
+          <div class="c-elev"><div class="stick"><span class="n" style="left:-26px;top:0">7</span><div>3F</div><div>2F</div><div class="on">1F</div><div style="font-size:10px">MAP</div></div></div>
+          <div class="awning"><span class="n" style="left:12px;top:7px">1</span></div>
+          <div class="c-head"><div class="min" style="font-size:20px">菓子喫茶 モンブラン</div><div style="font-size:11px">本日 8:00–18:00 ／ <b>地図</b> ／ Instagram</div></div>
+          <div class="sec c-hero">
+            <span class="n">2</span>
+            <div class="ph dark"><span>たぬきケーキ（真正面・大きく）</span></div>
+            <div class="t">
+              <div><p class="lbl">TANUKI CAKE — SINCE 1966</p>
+                <p class="ttl" style="font-size:34px;margin:14px 0 16px">昭和から、<br>今日まで。</p>
+                <span class="txt"></span><span class="txt m"></span>
+                <div style="margin-top:16px"><span class="btn fill">このケーキの話</span><span class="btn">お店へ行く</span></div></div>
+              <div style="display:flex;gap:12px;align-items:end"><div class="ph" style="width:110px;height:140px"><span>外観</span></div><p style="font-size:11px;color:var(--mid)">東京都千代田区神田神保町<br>神保町駅から徒歩1分</p></div>
+            </div>
+          </div>
+          <div class="sec">
+            <span class="n">3</span>
+            <p class="lbl">STORY</p>
+            <p class="ttl" style="font-size:28px;margin:8px 0 6px;max-width:60%">祖父母から母へ。そして、東京へ。</p>
+            <p style="color:var(--mid);font-size:12px;max-width:440px">年代を左から右へたどる（スマホは横スワイプ）</p>
+            <div class="tl" style="margin-top:28px">
+              <div><p class="yr">1966</p><p class="min">大分・豊後高田で創業</p><div class="ph" style="height:150px;margin-top:10px"></div><span class="txt"></span></div>
+              <div style="margin-top:40px"><p class="yr">—</p><p class="min">祖母と母が守る</p><div class="ph" style="height:110px;margin-top:10px"></div><span class="txt"></span></div>
+              <div><p class="yr">—</p><p class="min">祖父の夢を、東京で</p><div class="ph" style="height:180px;margin-top:10px"></div><span class="txt"></span></div>
+              <div style="margin-top:24px"><p class="yr">2026.6</p><p class="min">神保町に開店</p><div class="ph dark" style="height:130px;margin-top:10px"></div><span class="txt"></span></div>
+            </div>
+          </div>
+          <div class="sec">
+            <span class="n">4</span>
+            <div class="floor"><span class="f">1F</span><span class="ttl" style="font-size:22px">お菓子売場</span><span class="lbl" style="margin-left:auto">SWEETS / TAKE OUT</span></div>
+            <div class="c-1f">
+              <div><div class="ph" style="height:300px"><span>ショーケース</span></div><span class="txt" style="margin-top:14px"></span><span class="txt s"></span></div>
+              <div>
+                <p class="cap">ショーケースのように並べる</p>
+                <div class="case">
+                  <div><div class="ph" style="height:90px"></div><p style="font-size:11px;margin-top:6px">たぬき<br><span style="color:var(--mid)">¥000</span></p></div>
+                  <div><div class="ph" style="height:90px"></div><p style="font-size:11px;margin-top:6px">ショート<br><span style="color:var(--mid)">¥000</span></p></div>
+                  <div><div class="ph" style="height:90px"></div><p style="font-size:11px;margin-top:6px">マーブル<br><span style="color:var(--mid)">¥000</span></p></div>
+                  <div><div class="ph" style="height:90px"></div><p style="font-size:11px;margin-top:6px">やせうま<br><span style="color:var(--mid)">¥000</span></p></div>
+                </div>
+                <p style="font-size:11px;color:var(--light);margin-top:8px">テイクアウトの可否をアイコンで表示</p>
+              </div>
+            </div>
+          </div>
+          <div class="sec">
+            <span class="n">5</span>
+            <div class="floor"><span class="f">2F・3F</span><span class="ttl" style="font-size:22px">喫茶室</span><span class="lbl" style="margin-left:auto">CAFE</span></div>
+            <p class="min" style="font-size:14px">お菓子を食べるだけじゃない。</p>
+            <div class="timebar">
+              <div>8–10 モーニング</div><div class="off">準備</div><div>11–14 ランチ</div><div>14–18 喫茶</div>
+            </div>
+            <p style="font-size:11px;color:var(--mid);margin-bottom:24px">水〜金。土日祝は 9:00–18:00 終日喫茶。帯をタップすると、その時間のメニューへ。</p>
+            <div class="c-23">
+              <div class="ph" style="grid-column:1/8;height:320px"><span>2F（臙脂のソファ）</span></div>
+              <div style="grid-column:8/13;display:flex;flex-direction:column;gap:16px">
+                <div class="ph" style="height:150px"><span>3F</span></div>
+                <div><div class="leader"><b>プリンアラモード</b><em>¥000</em></div><div class="leader"><b>クリームソーダ</b><em>¥000</em></div><div class="leader"><b>がめ煮カレー</b><em>¥000</em></div><div class="leader"><b>エルヴィスサンド</b><em>¥000</em></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="sec">
+            <span class="n">6</span>
+            <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px">
+              <div class="ph" style="height:140px;grid-column:span 2"></div><div class="ph" style="height:140px"></div><div class="ph" style="height:140px"></div><div class="ph" style="height:140px;grid-column:span 2"></div>
+            </div>
+            <p style="text-align:center;margin-top:16px"><span class="btn">@montblanc.jimbocho をフォロー</span></p>
+          </div>
+          <div class="sec" style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
+            <div class="mapbox" style="height:260px"><div class="pin"></div></div>
+            <div><p class="lbl">ACCESS</p><p class="ttl" style="font-size:22px;margin:6px 0 14px">また、帰ってきてください。</p>
+              <table class="info"><tr><th>住所</th><td>千代田区神田神保町1-12-11-1</td></tr><tr><th>営業</th><td>水〜金 8–18 ／ 土日祝 9–18</td></tr><tr><th>定休</th><td>月・火</td></tr></table>
+              <span class="btn fill">Google Map</span></div>
+          </div>
+          <div class="awning" style="height:18px"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidecol">
+      <div>
+        <p class="cap">SP ― 375px 想定</p>
+        <div class="sp"><div class="scr">
+          <div class="awning" style="height:18px"></div>
+          <div style="display:flex;justify-content:space-between;padding:14px 10px 8px"><b class="min">モンブラン</b><span>☰</span></div>
+          <div class="ph dark" style="height:280px;margin:0 14px"><span>たぬきケーキ</span></div>
+          <div style="padding:14px"><p class="ttl" style="font-size:18px">昭和から、今日まで。</p><span class="btn fill">このケーキの話</span></div>
+          <div style="padding:14px;overflow:hidden"><p class="lbl">STORY ― 横スワイプ</p><div style="display:flex;gap:8px;width:420px;margin-top:6px"><div class="ph" style="width:130px;height:110px"></div><div class="ph" style="width:130px;height:110px"></div><div class="ph" style="width:130px;height:110px"></div></div></div>
+          <div style="padding:14px"><div class="floor" style="margin-bottom:10px"><span class="f" style="font-size:30px">1F</span><b>お菓子売場</b></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="ph" style="height:70px"></div><div class="ph" style="height:70px"></div><div class="ph" style="height:70px"></div><div class="ph" style="height:70px"></div></div></div>
+          <div style="padding:14px"><div class="floor" style="margin-bottom:10px"><span class="f" style="font-size:30px">2F</span><b>喫茶室</b></div>
+            <div style="border:1px solid var(--ink);font-size:9px"><div style="padding:5px;border-bottom:1px solid var(--line)">8–10 モーニング</div><div style="padding:5px;border-bottom:1px solid var(--line)">11–14 ランチ</div><div style="padding:5px;background:var(--ink);color:#fff">14–18 喫茶 ← いま</div></div>
+            <div class="ph" style="height:150px;margin-top:10px"></div></div>
+          <div style="padding:14px"><div class="mapbox" style="height:110px"><div class="pin"></div></div></div>
+        </div></div>
+      </div>
+      <div class="notes">
+        <h4>ポイント</h4>
+        <ol>
+          <li><span class="n">1</span><span>ページの最上部に実店舗の赤いオーニングをモチーフにした縞（カラー時に赤）。</span></li>
+          <li><span class="n">2</span><span>ヒーローは<b>たぬきケーキ</b>。Instagram で見た人が「この店だ」とすぐわかる。</span></li>
+          <li><span class="n">3</span><span>STORY は年表。PC は横並び、スマホは横スワイプ。</span></li>
+          <li><span class="n">4</span><span>1F：お菓子売場。ショーケースのような区切りで商品を並べる。</span></li>
+          <li><span class="n">5</span><span>2F・3F：喫茶。時間帯の帯で「いつ何が食べられるか」を一目で。</span></li>
+          <li><span class="n">6</span><span>Instagram へ。</span></li>
+          <li><span class="n">7</span><span>右側に小さな「階数表示」を固定。エレベーターのようにセクションへ移動。</span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================================== compare -->
+<section class="panel" id="p-cmp">
+  <table class="cmp">
+    <thead><tr><th></th><th>A 雑誌の見開き</th><th>B 喫茶の品書き帖</th><th>C お店の階を上がる</th></tr></thead>
+    <tbody>
+      <tr><th>最初に見えるもの</th><td>店の写真＋メインコピー</td><td>写真＋縦書きコピー、左に営業情報</td><td>たぬきケーキ</td></tr>
+      <tr><th>読ませる順番</th><td>物語 → たぬき → メニュー → 喫茶</td><td>物語 → たぬき → メニュー → 喫茶（本の章立て）</td><td>たぬき → 物語 → 1F → 2F・3F</td></tr>
+      <tr><th>営業時間・地図の見つけやすさ</th><td>△ ヒーローの帯とヘッダーのみ</td><td>◎ 常に表示（スマホは下部バー）</td><td>○ ヘッダー＋時間帯の帯</td></tr>
+      <tr><th>写真の迫力</th><td>◎</td><td>○（額装で落ち着いた見せ方）</td><td>○</td></tr>
+      <tr><th>他の純喫茶サイトとの差</th><td>○ 王道の上質さ</td><td>◎ 縦書き・本の街らしさ</td><td>◎ 店の建物そのものが構成になる</td></tr>
+      <tr><th>写真素材への依存</th><td>高い</td><td>中</td><td>中</td></tr>
+      <tr><th>実装・更新のしやすさ</th><td>◎</td><td>○（縦書きの調整が必要）</td><td>○</td></tr>
+      <tr><th>向いているケース</th><td>良い写真がそろっている</td><td>家族の物語と「文学的な空気」を一番に出したい</td><td>Instagram経由の新しいお客さんを増やしたい</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:16px;color:var(--mid)">組み合わせも可能です。例：A をベースに、B の「営業情報の下部固定バー」と C の「時間帯の帯」を入れる。</p>
+</section>
+
+<script>
+document.querySelectorAll('.tabs button').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected','false'));
+    b.setAttribute('aria-selected','true');
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+    document.getElementById('p-'+b.dataset.t).classList.add('on');
+    window.scrollTo({top:0});
+  });
+});
+</script>
+</body>
+</html>
