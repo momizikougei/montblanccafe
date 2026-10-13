@@ -217,18 +217,7 @@ function renderPhotos() {
   });
 }
 
-/* ---------------------------------------------------------
-   配色：案2「チョコレートとクリーム」で確定。
-   他の案は theme.css に残してあり、?theme=enji などで確認できる。
-   --------------------------------------------------------- */
-const THEMES = ["choco", "enji", "melon", "night", "pudding"];
-function applyTheme() {
-  const q = new URLSearchParams(location.search).get("theme");
-  document.documentElement.dataset.theme = THEMES.includes(q) ? q : "choco";
-}
-
 /* --------------------------------------------------------- */
-applyTheme();
 renderPhotos();
 drawAwning();
 new ResizeObserver(drawAwning).observe($(".awning"));

@@ -111,4 +111,5 @@ const PHOTOS = {
   coaster:     TB + "365164/640x640_rect_d6e279d8b00d15f9650adbd265360e28.jpg", // メッセージ入りのたぬき
   lamp:        TB + "367683/640x640_rect_569624ae58ead0c6186d28ef930fba71.jpg", // 照明とカウンター
   town:        TB + "385852/640x640_rect_49b19f2ad34b00ffb9b83f127fe45e15.jpg", // 建物と街
+  cfGift:      TB + "365164/640x640_rect_178d3068788434326c7ab482d7644179.jpg", // たぬきケーキの詰め合わせ
 };

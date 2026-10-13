@@ -1,46 +1,11 @@
 /* =========================================================
    デザイン層（配色・質感・装飾）
    style.css（レイアウト）の上に重ねる。
-   配色は [data-theme] ごとのトークンだけで切り替わる。
+   色はすべて下の :root のトークンで管理している。
    ========================================================= */
 
-/* ---------- 配色案 1：臙脂と生成り ---------- */
-:root,
-[data-theme="enji"] {
-  --paper: #f4ecdd;
-  --paper-2: #fbf6ec;
-  --alt: #ebdfca;
-  --ink: #3a2219;
-  --ink-2: #6b5244;
-  --ink-3: #9a8574;
-  --line: #d6c5ad;
-  --ph: #e6dac6;
-  --ph-line: #d2c3ab;
-  --ph-dark: #cdbca2;
-
-  --accent: #7d1f2a;
-  --accent-2: #4f6b4a;
-  --on-accent: #fbf6ec;
-
-  --side-bg: #fbf6ec;
-  --side-ink: var(--ink);
-  --side-line: var(--line);
-
-  --footer-bg: #3a2219;
-  --footer-ink: #f4ecdd;
-
-  --awning: #b5222c;
-  --awning-shade: #7a1219;
-  --awning-light: #c93a40;
-  --awning-trim: #fbf3e6;
-
-  --photo-filter: sepia(.08) saturate(.95);
-  --grain-opacity: .35;
-  --grain-blend: multiply;
-}
-
-/* ---------- 配色案 2：チョコレートとクリーム ---------- */
-[data-theme="choco"] {
+/* ---------- 配色：チョコレートとクリーム ---------- */
+:root {
   --paper: #efe3cc;
   --paper-2: #f8efdd;
   --alt: #e5d3b5;
@@ -70,108 +35,6 @@
 
   --photo-filter: sepia(.12) saturate(.95);
   --grain-opacity: .4;
-  --grain-blend: multiply;
-}
-
-/* ---------- 配色案 3：メロンソーダ ---------- */
-[data-theme="melon"] {
-  --paper: #f1efe3;
-  --paper-2: #fbfaf2;
-  --alt: #dde8d9;
-  --ink: #1f2b25;
-  --ink-2: #4c5a52;
-  --ink-3: #85918a;
-  --line: #cbd4c4;
-  --ph: #e1e6da;
-  --ph-line: #c9d1c1;
-  --ph-dark: #c3ccba;
-
-  --accent: #2f6150;
-  --accent-2: #c8323c;
-  --on-accent: #fbfaf2;
-
-  --side-bg: #fbfaf2;
-  --side-ink: var(--ink);
-  --side-line: var(--line);
-
-  --footer-bg: #24463a;
-  --footer-ink: #eef1e6;
-
-  --awning: #c0262f;
-  --awning-shade: #7f1219;
-  --awning-light: #d23e44;
-  --awning-trim: #fbfaf2;
-
-  --photo-filter: saturate(1);
-  --grain-opacity: .28;
-  --grain-blend: multiply;
-}
-
-/* ---------- 配色案 4：夜の純喫茶 ---------- */
-[data-theme="night"] {
-  --paper: #24140f;
-  --paper-2: #2e1a14;
-  --alt: #331d16;
-  --ink: #f0e2c6;
-  --ink-2: #c9b497;
-  --ink-3: #94806a;
-  --line: #4f3529;
-  --ph: #3a2620;
-  --ph-line: #4d342a;
-  --ph-dark: #442d25;
-
-  --accent: #e39a3b;
-  --accent-2: #b5262e;
-  --on-accent: #24140f;
-
-  --side-bg: #1c0f0b;
-  --side-ink: var(--ink);
-  --side-line: #3c271e;
-
-  --footer-bg: #160b08;
-  --footer-ink: #e9d9bb;
-
-  --awning: #a3202a;
-  --awning-shade: #5a0d13;
-  --awning-light: #b8333a;
-  --awning-trim: #f3e3c5;
-
-  --photo-filter: sepia(.1) brightness(.95);
-  --grain-opacity: .12;
-  --grain-blend: screen;
-}
-
-/* ---------- 配色案 5：プリンとカラメル ---------- */
-[data-theme="pudding"] {
-  --paper: #f7ecd0;
-  --paper-2: #fdf6e3;
-  --alt: #f0deb2;
-  --ink: #3d2a17;
-  --ink-2: #6d553b;
-  --ink-3: #a08a6b;
-  --line: #e0cda2;
-  --ph: #efe0bb;
-  --ph-line: #ddca9c;
-  --ph-dark: #d8c393;
-
-  --accent: #a5551f;
-  --accent-2: #d9a43a;
-  --on-accent: #fdf6e3;
-
-  --side-bg: #fdf6e3;
-  --side-ink: var(--ink);
-  --side-line: var(--line);
-
-  --footer-bg: #5a3418;
-  --footer-ink: #f7ecd0;
-
-  --awning: #b8262c;
-  --awning-shade: #7a1419;
-  --awning-light: #cc3d3e;
-  --awning-trim: #fdf6e3;
-
-  --photo-filter: sepia(.1) saturate(1.02);
-  --grain-opacity: .32;
   --grain-blend: multiply;
 }
 
@@ -260,7 +123,7 @@ body::before {
 .side__nav a { border-color: var(--side-line) !important; }
 .side__nav small { color: inherit; opacity: .55; }
 .side__nav a.is-current { color: var(--accent); }
-[data-theme="choco"] .side__nav a.is-current { color: #f0b7a3; }
+.side__nav a.is-current { color: #f0b7a3; }
 .today {
   background: transparent;
   border: 3px double currentColor;
@@ -269,9 +132,9 @@ body::before {
 .today__label,
 .today__band { color: inherit; opacity: .7; }
 .today__status { color: var(--accent); }
-[data-theme="choco"] .today__status { color: #f0b7a3; }
-[data-theme="choco"] .side .btn { border-color: var(--side-ink); background: transparent; color: var(--side-ink); }
-[data-theme="choco"] .side .btn--fill { background: var(--side-ink); color: var(--accent); }
+.today__status { color: #f0b7a3; }
+.side .btn { border-color: var(--side-ink); background: transparent; color: var(--side-ink); }
+.side .btn--fill { background: var(--side-ink); color: var(--accent); }
 
 /* =========================================================
    ボタン
@@ -321,13 +184,40 @@ body::before {
 .timeband__seg.is-off { color: var(--ink-3); }
 
 /* =========================================================
+   ご支援：昔の伝票と、御礼の判子
+   ========================================================= */
+#support .cf__photo {
+  border: 7px solid var(--paper-2);
+  box-shadow: 0 0 0 1px var(--line), 0 10px 18px -12px rgba(40, 20, 10, .45);
+  transform: rotate(-1deg);
+}
+.cf__thanks { color: var(--accent-2); }
+.slip {
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-top: 4px double var(--accent-2);
+  box-shadow: 0 10px 18px -14px rgba(40, 20, 10, .5);
+}
+.slip__head { border-bottom: 1px solid var(--accent-2); color: var(--accent-2); }
+.slip__rows > div + div { border-top: 1px dashed var(--line); }
+.slip__rows dt { color: var(--ink-2); }
+.slip__rows b { color: var(--ink); }
+.slip__stamp {
+  color: var(--accent-2);
+  border: 2px solid var(--accent-2);
+  box-shadow: inset 0 0 0 3px var(--paper-2), inset 0 0 0 4px var(--accent-2);
+  background: rgba(248, 239, 221, .6);
+  opacity: .88;
+}
+.cf__foot { border-top: 1px solid var(--accent); }
+
+/* =========================================================
    写真帖・道しるべ
    ========================================================= */
 .insta { border-color: var(--accent); }
 .insta__id { color: var(--accent); }
 .access__map { border-color: var(--accent); }
 .access__map iframe { filter: sepia(.35) saturate(.75) contrast(1.02); }
-[data-theme="night"] .access__map iframe { filter: invert(.88) hue-rotate(180deg) sepia(.4) saturate(.8); }
 
 /* =========================================================
    フッター：オーニングの裾をもう一度
@@ -362,7 +252,7 @@ body::before {
   .dock a { border-color: var(--side-line); }
   .dock a.is-current { background: var(--accent); color: var(--on-accent); }
   .dock__status b { color: var(--accent); }
-  [data-theme="choco"] .dock__status b { color: #f0b7a3; }
+  .dock__status b { color: #f0b7a3; }
   .dock__status span { color: inherit; opacity: .7; }
   .hero__photo { border-width: 6px; outline-offset: 5px; }
   .story .ph, .menu-photos .ph, .cafe .ph { border-width: 5px; }
