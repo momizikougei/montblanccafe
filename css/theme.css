@@ -149,6 +149,20 @@ body::before {
 .btn--fill { background: var(--accent); color: var(--on-accent); }
 .btn--fill:hover { background: transparent; color: var(--accent); }
 
+/* 目立たせたいボタン（店の赤） */
+.btn--red {
+  background: var(--accent-2);
+  border-color: var(--accent-2);
+  color: #fff8ee;
+  padding: 14px 26px;
+  font-size: 15px;
+  font-weight: 700;
+  box-shadow: 0 4px 0 #8a231e;
+  transition: transform .15s, box-shadow .15s, background .2s;
+}
+.btn--red span { margin-left: 10px; }
+.btn--red:hover { background: #d0473e; color: #fff8ee; transform: translateY(2px); box-shadow: 0 2px 0 #8a231e; }
+
 /* =========================================================
    たぬき：図版
    ========================================================= */
@@ -168,9 +182,13 @@ body::before {
   background: var(--paper-2);
   border: 4px double var(--accent);
 }
-.menu__col { border-color: var(--line); }
-.menu__head { border-bottom: 1px solid var(--accent); }
+.menu__featured { border-bottom: 1px solid var(--accent); }
+.menu__badge { color: var(--accent-2); }
+.menu__featured-name { color: var(--accent); }
+.menu__featured-name small { color: var(--accent-2); }
 .menu__head h3 { color: var(--accent); }
+.menu__head::after { color: var(--accent); }
+.menu__head:hover h3 { color: var(--accent-2); }
 .menu__name small { color: var(--accent-2); }
 .menu__item::after { border-bottom-color: var(--ink-3); }
 
@@ -178,10 +196,6 @@ body::before {
    喫茶室：時間帯の帯
    ========================================================= */
 .cafe__floors span { color: var(--accent); }
-.timeband__bar { background: var(--paper-2); border-color: var(--accent); }
-.timeband__seg { border-color: var(--accent); }
-.timeband__seg.is-now { background: var(--accent); color: var(--on-accent); }
-.timeband__seg.is-off { color: var(--ink-3); }
 
 /* =========================================================
    ご支援：昔の伝票と、御礼の判子

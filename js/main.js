@@ -103,44 +103,56 @@ function renderStatus() {
 }
 
 /* ---------------------------------------------------------
-   時間帯の帯（喫茶室）
-   --------------------------------------------------------- */
-function renderBands(s) {
-  const bar = $(".js-bands");
-  if (!bar) return;
-  bar.innerHTML = SHOP.bands.weekday
-    .map((b) => {
-      const isNow = s.type === "weekday" && s.now === b;
-      const cls = ["timeband__seg", b.off && "is-off", isNow && "is-now"].filter(Boolean).join(" ");
-      return `<div class="${cls}" style="flex:${b.to - b.from}"><b>${b.from}–${b.to}</b>${b.label}</div>`;
-    })
-    .join("");
-}
-
-/* ---------------------------------------------------------
    お品書き
+   featured: true の品（たぬきケーキ）は常に表示し、
+   それ以外はジャンルごとに開閉できる一覧にする。
    --------------------------------------------------------- */
 function renderMenu() {
   const box = $(".js-menu");
   if (!box) return;
   const yen = (p) => (p == null ? "—" : `¥${p.toLocaleString()}`);
-  box.innerHTML = SHOP.menu
+  const row = (it) => `
+    <div class="menu__item">
+      <span class="menu__name">${it.name}${it.note ? `<small>${it.note}</small>` : ""}</span>
+      <span class="menu__price">${yen(it.price)}</span>
+    </div>`;
+
+  const featured = SHOP.menu.flatMap((c) => c.items.filter((it) => it.featured));
+  const featuredNames = featured.map((it) => it.name);
+  const inCats = (name) =>
+    SHOP.menu.filter((c) => c.items.some((it) => it.name === name)).map((c) => c.title);
+
+  const pinned = featured
     .map(
-      (cat) => `
-      <div class="menu__col" id="menu-${cat.id}">
-        <div class="menu__head"><h3>${cat.title}</h3><span>${cat.label}</span></div>
-        ${cat.items
-          .map(
-            (it) => `
-          <div class="menu__item">
-            <span class="menu__name">${it.name}${it.note ? `<small>${it.note}</small>` : ""}</span>
-            <span class="menu__price">${yen(it.price)}</span>
-          </div>`
-          )
-          .join("")}
-      </div>`
+      (it) => `
+    <div class="menu__featured">
+      <p class="menu__badge">看板</p>
+      ${it.photo ? `<figure class="ph menu__featured-photo" data-label="${it.name}" data-photo="${it.photo}"></figure>` : ""}
+      <div class="menu__featured-body">
+        <p class="menu__featured-name">${it.name}${it.note ? `<small>${it.note}</small>` : ""}</p>
+        <p class="menu__featured-tags">${inCats(it.name).join("・")}</p>
+      </div>
+      <p class="menu__price menu__featured-price">${yen(it.price)}</p>
+    </div>`
     )
     .join("");
+
+  const groups = SHOP.menu
+    .map((cat) => {
+      const items = cat.items.filter((it) => !featuredNames.includes(it.name));
+      if (!items.length) return "";
+      return `
+    <details class="menu__group" id="menu-${cat.id}">
+      <summary class="menu__head">
+        <h3>${cat.title}</h3><span class="menu__en">${cat.label}</span>
+        <span class="menu__count">${items.length}品</span>
+      </summary>
+      <div class="menu__list">${items.map(row).join("")}</div>
+    </details>`;
+    })
+    .join("");
+
+  box.innerHTML = pinned + groups;
 }
 
 /* ---------------------------------------------------------
@@ -218,12 +230,12 @@ function renderPhotos() {
 }
 
 /* --------------------------------------------------------- */
+renderMenu();
 renderPhotos();
 drawAwning();
 new ResizeObserver(drawAwning).observe($(".awning"));
 renderInfo();
-renderMenu();
-renderBands(renderStatus());
-setInterval(() => renderBands(renderStatus()), 60 * 1000);
+renderStatus();
+setInterval(renderStatus, 60 * 1000);
 watchSections();
 reveal();

@@ -41,14 +41,16 @@ const SHOP = {
     { day: "定休日", time: "月・火" },
   ],
 
-  /* お品書き：price は数字（円）。未定は null → 「—」と表示 */
+  /* お品書き：price は数字（円）。未定は null → 「—」と表示
+     featured: true の品は「看板」として、開閉式の一覧の外に常に表示する
+     （同じ名前の品が他のジャンルにあっても、一覧からは外れる） */
   menu: [
     {
       id: "cake",
       label: "CAKE",
       title: "ケーキ",
       items: [
-        { name: "たぬきケーキ", price: null, note: "昭和41年から" },
+        { name: "たぬきケーキ", price: null, note: "愛称「ぽんぽこ」・昭和41年から", featured: true, photo: "tanuki" },
         { name: "ショートケーキ", price: null },
         { name: "マーブルケーキ", price: null },
       ],

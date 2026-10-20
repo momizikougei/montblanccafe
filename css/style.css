@@ -10,6 +10,7 @@
   --f-body: "Zen Kaku Gothic Antique", sans-serif;
   --f-en: "IM Fell English", serif;
   --f-en-sc: "IM Fell English SC", serif;
+  --f-num: "Zen Kaku Gothic Antique", sans-serif; /* 価格・数字（読みやすさ優先） */
 
   --side-w: 210px;
   --dock-h: 0px;
@@ -276,21 +277,80 @@ img { max-width: 100%; display: block; }
 
 /* ---------- MENU ---------- */
 .menu {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
   background: var(--paper-2);
   border: 1px solid var(--ink);
+  padding: 6px 28px 6px;
 }
-.menu__col { padding: 22px 20px 26px; border-left: 1px solid var(--line); }
-.menu__col:first-child { border-left: none; }
-.menu__head { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--ink); padding-bottom: 6px; margin-bottom: 8px; }
+
+/* 看板（常に表示） */
+.menu__featured {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: center;
+  gap: 20px;
+  padding: 22px 4px;
+  border-bottom: 1px solid var(--ink);
+}
+.menu__badge {
+  writing-mode: vertical-rl;
+  font-family: var(--f-head);
+  font-size: 14px;
+  letter-spacing: .2em;
+  padding: 8px 4px;
+  border: 1px solid currentColor;
+}
+.menu__featured-photo { width: 84px; height: 84px; min-height: 0; border-radius: 50%; }
+.menu__featured-photo::after { display: none; }
+.menu__featured-name { font-family: var(--f-head); font-size: 22px; line-height: 1.5; }
+.menu__featured-name small { display: block; font-family: var(--f-body); font-size: 12px; margin-top: 2px; }
+.menu__featured-tags { font-size: 12px; color: var(--ink-3); margin-top: 4px; }
+.menu__featured-price { font-size: 20px; }
+
+/* ジャンルごとの開閉 */
+.menu__group + .menu__group { border-top: 1px solid var(--line); }
+.menu__head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 16px 4px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+.menu__head::-webkit-details-marker { display: none; }
 .menu__head h3 { font-family: var(--f-head); font-weight: 400; font-size: 18px; }
-.menu__head span { font-family: var(--f-en-sc); font-size: 12px; color: var(--ink-3); }
+.menu__en { font-family: var(--f-en-sc); font-size: 12px; color: var(--ink-3); }
+.menu__count { margin-left: auto; font-size: 12px; color: var(--ink-3); }
+.menu__head::after {
+  content: "";
+  align-self: center;
+  width: 9px; height: 9px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-3px) rotate(45deg);
+  transition: transform .25s;
+}
+.menu__group[open] .menu__head::after { transform: translateY(2px) rotate(-135deg); }
+.menu__list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 40px;
+  padding: 0 4px 18px;
+  animation: menu-open .35s ease;
+}
+@keyframes menu-open { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
 .menu__item { display: flex; align-items: baseline; gap: 6px; padding: 7px 0; font-size: 14px; }
 .menu__item::after { content: ""; order: 2; flex: 1; border-bottom: 1px dotted var(--ink-3); }
 .menu__name { order: 1; }
 .menu__name small { display: block; font-size: 11px; color: var(--ink-3); }
-.menu__price { order: 3; font-family: var(--f-en); font-size: 15px; }
+.menu__price {
+  order: 3;
+  font-family: var(--f-num);
+  font-size: 15px;
+  font-weight: 500;
+  font-variant-numeric: lining-nums tabular-nums;
+}
 .menu-photos { display: grid; grid-template-columns: 5fr 3fr 4fr; gap: 16px; margin-top: 36px; align-items: start; }
 .menu-photos .ph:nth-child(1) { height: 220px; }
 .menu-photos .ph:nth-child(2) { height: 300px; margin-top: -40px; }
@@ -306,13 +366,6 @@ img { max-width: 100%; display: block; }
 .cafe__text h3 { font-family: var(--f-head); font-weight: 400; font-size: 20px; margin-bottom: 8px; line-height: 1.5; }
 .cafe__text p { font-size: 14px; color: var(--ink-2); }
 
-.timeband { margin-top: 48px; }
-.timeband__bar { display: flex; border: 1px solid var(--ink); background: var(--paper-2); margin-top: 8px; }
-.timeband__seg { padding: 10px 12px; border-left: 1px solid var(--ink); font-size: 13px; min-width: 0; }
-.timeband__seg:first-child { border-left: none; }
-.timeband__seg b { display: block; font-family: var(--f-en); font-weight: 400; font-size: 14px; }
-.timeband__seg.is-off { background: repeating-linear-gradient(45deg, transparent 0 5px, var(--ph-line) 5px 6px); color: var(--ink-3); }
-.timeband__seg.is-now { background: var(--ink); color: var(--paper-2); }
 
 /* ---------- SUPPORT（クラウドファンディング） ---------- */
 .cf { display: grid; grid-template-columns: repeat(12, 1fr); gap: 28px 32px; align-items: start; }
@@ -327,7 +380,7 @@ img { max-width: 100%; display: block; }
 .slip__rows > div { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 0; }
 .slip__rows dt { font-size: 13px; }
 .slip__rows dd { font-size: 13px; }
-.slip__rows b { font-family: var(--f-en); font-weight: 400; font-size: 24px; margin-right: 2px; }
+.slip__rows b { font-family: var(--f-num); font-weight: 700; font-size: 24px; letter-spacing: .02em; font-variant-numeric: lining-nums tabular-nums; margin-right: 4px; }
 .slip__stamp {
   position: absolute; right: -22px; top: -26px;
   width: 64px; height: 64px; border-radius: 50%;
@@ -394,9 +447,6 @@ img { max-width: 100%; display: block; }
 @media (max-width: 1080px) {
   .sec { padding: 72px 40px 88px; }
   .chapter { gap: 36px; }
-  .menu { grid-template-columns: repeat(2, 1fr); }
-  .menu__col:nth-child(3) { border-left: none; }
-  .menu__col:nth-child(n + 3) { border-top: 1px solid var(--line); }
   .qa { grid-template-columns: repeat(2, 1fr); }
   .access { grid-template-columns: 1fr; }
   .access__map { aspect-ratio: 16 / 10; }
@@ -445,9 +495,16 @@ img { max-width: 100%; display: block; }
   .plate { padding: 10px 10px 8px; outline-offset: 3px; }
   .qa { grid-template-columns: 1fr; gap: 16px; margin-top: 36px; }
 
-  .menu { grid-template-columns: 1fr; }
-  .menu__col { border-left: none; padding: 16px 16px 18px; }
-  .menu__col + .menu__col { border-top: 1px solid var(--line); }
+  /* お品書き：見出しを右上に置き、枠は全幅で */
+  #menu.chapter { flex-direction: column; align-items: flex-end; }
+  #menu .chapter__body { width: 100%; }
+  .menu { padding: 2px 14px; }
+  .menu__head h3, .menu__en { white-space: nowrap; }
+  .menu__featured { gap: 12px; padding: 18px 2px; }
+  .menu__featured-photo { width: 60px; height: 60px; }
+  .menu__featured-name { font-size: 19px; }
+  .menu__featured-price { font-size: 17px; }
+  .menu__list { grid-template-columns: 1fr; }
   .menu-photos { grid-template-columns: 1fr 1fr; gap: 10px; }
   .menu-photos .ph:nth-child(1) { grid-column: 1 / 3; height: 180px; }
   .menu-photos .ph:nth-child(2) { margin-top: 0; height: 200px; }
@@ -457,10 +514,6 @@ img { max-width: 100%; display: block; }
   .cafe__main { grid-column: 1 / 7; grid-row: auto; height: 260px; }
   .cafe__sub { grid-column: 3 / 7; height: 140px; }
   .cafe__text { grid-column: 1 / 7; }
-  .timeband__bar { flex-direction: column; }
-  .timeband__seg { border-left: none; border-top: 1px solid var(--ink); flex: none !important; }
-  .timeband__seg:first-child { border-top: none; }
-  .timeband__seg b { display: inline; margin-right: 10px; }
 
   /* ご支援：見出しの横は写真だけ。その下は全幅 */
   #support.chapter { display: block; }
